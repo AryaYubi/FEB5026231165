@@ -1,0 +1,43 @@
+<html>
+    <head>
+        <title>
+            Belajar CSS Counter
+        </title>
+        <style>
+
+body { 
+counter-reset: a;
+}
+h2{
+  counter-reset: b;}
+  h2::before {
+    counter-increment: a;
+    content: counter(a) ". "; }
+h3::before {
+    counter-increment: b;
+    content: counter(a) " . " counter(b) " ";
+}
+        </style>
+    </head>
+
+    <body>
+<h1> Menu Makanan dan Minuman </h1>
+
+<h2> Makanan </h2>
+<h3> Nasi Goreng </h3>
+<h3> Rawon </h3>
+<h3> Nasi Campur </h3>
+<h2>Minuman</h2>
+<h3> Es Teh </h3>
+<h3> Es Jeruk </h3>
+<h3> Es Kopi </h3>
+
+
+
+    </body>
+
+
+
+
+
+</html>
