@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Japanese Breakfast Clone</title>
+  <link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { 
+      background-color: #0d1b2a;
+      color: white;
+      padding-top: 40px;
+      font-family: 'Merriweather', serif;
+    }
+    .main-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, #0d1b2a 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+.hidden {
+  display: none;
+}
+
+
+    .verified-img {
+      width: 16px;
+      height: 16px;
+      vertical-align: middle;
+      margin-left: 6px;
+    }
+
+    .main-card, .image-card {
+      background-color: #1b263b;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    }
+
+    .main-card img, .image-card img {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .main-card .card-body {
+      padding: 20px;
+    }
+
+    .btn-custom {
+  background-color: #74b3ce;
+  color: #0d1b2a;
+  font-weight: 500;
+  border: none;
+  padding: 20px 24px;
+  font-size: 1.2rem;
+  border-radius: 14px;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+}
+
+
+   
+.btn-custom:hover {
+  background-color: #a2d2ff;
+  color: black;
+  transform: scale(1.03); 
+  transition: transform 0.3s ease, background-color 0.3s ease;
+}
+.image-card:hover,
+.link-card:hover {
+  transform: scale(1.03);
+  transition: transform 0.3s ease;
+}
+
+
+    .card-button:hover {
+      background-color: #a2d2ff !important;
+      color: black !important;
+      transform: translateY(-2px);
+      transition: all 0.3s ease;
+    }
+
+    .card-button-text {
+      white-space: normal;
+      word-break: break-word;
+    }
+    .image-card {
+  background-color: #1b263b;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  scroll-snap-align: center;
+}
+
+.ellipsis-hover {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.ellipsis-hover::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  background-color: rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  opacity: 0;
+  transition: all 0.25s ease;
+  z-index: -1;
+}
+
+.ellipsis-hover:hover::before {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+}
+
+.ellipsis-hover:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.ellipsis-hover:hover .fa-ellipsis-v.text-dark {
+  color: black !important;
+  opacity: 1 !important;
+}
+.ellipsis-hover.no-color-change:hover .fa-ellipsis-v {
+  color: inherit !important;
+}
+
+.image-card {
+  transition: transform 0.3s ease;
+
+}
+.image-card:hover {
+  transform: scale(1.03);
+}
+.container.d-flex.justify-content-center {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.dots-icon {
+  color: #555454;
+  opacity: 0.5;
+  transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.dots-hover:hover .dots-icon {
+  color: #000000;     /* berubah jadi hitam */
+  opacity: 1;
+  transform: scale(1.1);
+  cursor: pointer;
+}
+.dragging {
+  cursor: grabbing;
+  scroll-behavior: auto !important;
+}
+
+#videoTrack::-webkit-scrollbar {
+  display: none;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scroll-behavior: smooth;
+ 
+}
+.image-card {
+  scroll-snap-align: start;
+}
+#scrollLeftVideo, #scrollRightVideo{
+  z-index: 1000;
+ 
+}
+
+#scrollLeftMusic, #scrollRightMusic{
+  z-index: 1000;
+ 
+}
+
+    @media (max-width: 576px) {
+      .main-card, .image-card {
+        border-radius: 10px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container d-flex flex-column align-items-center px-3">
+
+    
+<!-- Main Card -->
+<div class="main-card position-relative" style="max-width: 580px; max-height: 400px; border-radius: 10px; overflow: hidden; aspect-ratio: 6/4;">
+
+  <img src="https://ugc.production.linktr.ee/d29a7ae8-ff30-4003-8020-621cbfb9488f_Untitled-design--6-.png?io=true&size=avatar-hero-v1_0" 
+  alt="Artwork" 
+  style="width: 100%; height: 100%; object-fit: cover; display: block; position: relative; z-index: 0;">
+
+
+  <!-- Overlay Text -->
+  <div class="position-absolute w-100 text-center" style="bottom: 60px; left: 0; padding: 0 20px;">
+    <div class="d-flex justify-content-center align-items-center" style="gap: 6px;">
+      <h5 class="fw-bold mb-1 text-white" style="font-size: 1.3rem;">Japanese Breakfast</h5>
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/e4/Twitter_Verified_Badge.svg"
+     alt="Verified Badge"
+     style="width: 16px; height: 16px; margin-bottom: 2px;">
+     
+
+    </div>
+    <p class="mb-0 text-white" style="font-size: 0.95rem;">
+      New album 'For Melancholy Brunettes (& sad women)' out now
+    </p>
+  </div>
+</div>
+
+
+<!-- Button -->
+<a href="https://japanesebreakfast.rocks/#tour" 
+   target="_blank" 
+   class="btn btn-custom w-100 position-relative" 
+   style="padding: 20px 24px; font-size: 1.1rem; border-radius: 10px; max-width: 580px;">
+  
+  Tour Dates + Tickets
+
+  <!-- Three dots -->
+  <div style="position: absolute; right: 16px; top: 50%; transform: translateY(-50%);">
+    <div class="ellipsis-hover" onclick="window.open('https://tr.ee/QsYbu8pApA', '_blank')">  
+      <i class="fas fa-ellipsis-v text-dark" style="opacity: 0.5;"></i>
+    </div>
+  </div>
+  
+
+
+<!-- Album Promo Card -->
+<a href="https://japanesebreakfast.lnk.to/for-melancholy-brunettes-and-sad-women" target="_blank" style="text-decoration: none;">
+  <div class="image-card mt-4 position-relative" style="max-width: 580px;">
+    <img src="https://ugc.production.linktr.ee/bad7d43a-d964-41fd-812a-cac0c491005d_Untitled-design--9-.png?io=true&size=thumbnail-feature-v1_0" 
+         alt="Album Promo" 
+         style="width: 100%; height: auto; object-fit: cover; display: block; border-radius: 20px;">
+    
+    <div class="position-absolute start-0 bottom-0 w-100 text-white px-3 py-3 d-flex align-items-center justify-content-between"
+         style="z-index: 2; background: linear-gradient(to top, rgba(13,27,42,0.8) 60%, rgba(13,27,42,0) 100%); border-radius: 0 0 20px 20px;">
+      <strong class="mb-0">Order & Stream 'For Melancholy Brunettes (& sad women)'</strong>
+      <div class="ellipsis-hover no-color-change" onclick="window.open('https://tr.ee/https://http://japanesebreakfast.lnk.to/for-melancholy-brunettes-and-sad-women.ee/aKeDHSnpc_', '_blank')">
+        <i class="fas fa-ellipsis-v text-white" style="opacity: 0.5;"></i>
+      </div>
+      
+    </div>
+  </div>
+</a>
+
+
+ <!-- Honey Water Card-->
+ <a href="https://www.youtube.com/watch?v=..." target="_blank" style="text-decoration: none; max-width: 580px; width: 100%;" class="mt-3">
+  <div class="link-card d-flex align-items-center justify-content-between px-3 py-2" 
+       style="background-color: #74b3ce; border-radius: 12px; width: 100%; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+
+    <!-- Thumbnail -->
+    <img src="https://ugc.production.linktr.ee/5b47d1f5-d6d8-494d-a048-1b883cb239ae_images--1-.jpeg?io=true&size=thumbnail-stack-v1_0" alt="Thumbnail" style="width: 48px; height: 48px; object-fit: cover; border-radius: 10px;">
+
+    <!-- Text -->
+    <div class="flex-grow-1 ms-3 me-2">
+      <span style="color: #0d1b2a; font-weight: 500;">
+        "Honey Water" & "Mega Circuit" | Live From Vevo Studios
+      </span>
+    </div>
+
+    <!-- Fixed Three Dots -->
+    <div class="ellipsis-hover" onclick="window.open('https://www.youtube.com/watch?v=gv5wWefxO6Q&list=PLHlHGrnUY3Dt4UjKosWqNLZSsAsZmenDt&ab_channel=jbrekkieVEVO', '_blank')">
+      <i class="fas fa-ellipsis-v text-dark" style="opacity: 0.5;"></i>
+    </div>
+
+  </div>
+</a>
+
+
+<!-- Picture Window -->
+<a href="https://www.youtube.com/watch?v=w2BY6y_LX5s&feature=youtu.be" target="_blank" style="text-decoration: none;">
+  <div class="image-card mt-4 position-relative" style="max-width: 580px;">
+    <img src="https://ugc.production.linktr.ee/90a5800a-e4b4-4d96-8d01-21c4935114bb_maxresdefault.jpeg?io=true&size=thumbnail-feature-v1_0" 
+         alt="Picture Window" 
+         style="width: 100%; height: auto; object-fit: cover; display: block; border-radius: 20px;">
+
+    <div class="position-absolute start-0 bottom-0 w-100 text-white px-3 py-3 d-flex align-items-center justify-content-between"
+         style="z-index: 2; background: linear-gradient(to top, rgba(13,27,42,0.8) 60%, rgba(13,27,42,0) 100%); border-radius: 0 0 20px 20px;">
+      <strong class="mb-0">"Picture Window" Music Video</strong>
+      <div class="ellipsis-hover no-color-change" onclick="window.open('https://tr.ee/https://tr.ee/aKeDHSnpc_', '_blank')">
+        <i class="fas fa-ellipsis-v text-white" style="opacity: 0.5;"></i>
+      </div>
+      
+    </div>
+  </div>
+</a>
+
+
+<!-- Merch Store -->
+<a href="https://japanesebreakfast.myshopify.com/collections/featured" target="_blank" style="text-decoration: none;">
+  <div class="image-card mt-4 position-relative" style="max-width: 580px;">
+    <img src="https://ugc.production.linktr.ee/da4c212c-1e59-4a48-8ce5-86dd667ebc52_Untitled-design--4-.png?io=true&size=thumbnail-feature-v1_0" 
+         alt="Merch Store" 
+         style="width: 100%; height: auto; object-fit: cover; display: block; border-radius: 20px;">
+
+    <div class="position-absolute start-0 bottom-0 w-100 text-white px-3 py-3 d-flex align-items-center justify-content-between"
+         style="z-index: 2; background: linear-gradient(to top, rgba(13,27,42,0.8) 60%, rgba(13,27,42,0) 100%); border-radius: 0 0 20px 20px;">
+      <strong class="mb-0">"Merch Store"</strong>
+      <div class="ellipsis-hover no-color-change" onclick="window.open('https://tr.ee/VgVl626nKL', '_blank')">
+        <i class="fas fa-ellipsis-v text-white" style="opacity: 0.5;"></i>
+      </div>
+      
+      
+    </div>
+  </div>
+</a>
+
+
+
+ <!-- TEXT EMAIL-->
+<a href="https://tr.ee/xX-VSLwhkP" 
+target="_blank" 
+class="btn btn-custom w-100 position-relative text-center mt-3" 
+style="max-width: 580px; padding: 20px 24px; font-size: 1.0rem; border-radius: 10px;">
+<strong>Text + Email List Signup</strong>
+<div class="ellipsis-hover position-absolute" style="top: 50%; right: 16px; transform: translateY(-50%);"
+     onclick="window.open('https://tr.ee/xX-VSLwhkP', '_blank')">
+  <i class="fas fa-ellipsis-v text-dark" style="opacity: 0.5;"></i>
+</div>
+
+</a>
+
+
+
+  
+
+  <!-- H Mart -->
+<a href="https://www.penguinrandomhouse.com/books/672618/crying-in-h-mart-by-michelle-zauner/" 
+target="_blank" 
+class="btn btn-custom w-100 position-relative mt-3"
+style="max-width: 580px; padding: 20px 24px; font-size: 1.0rem; border-radius: 10px;">
+
+<!-- Thumbnail kiri -->
+<img src="https://ugc.production.linktr.ee/ea783301-89bf-4b1a-b4cb-aec6e62e7bea_zaun-cryingathmart-sq.jpeg?io=true&size=thumbnail-stack-v1_0" 
+    alt="Crying in H Mart" 
+    style="width: 44px; height: 44px; object-fit: cover; border-radius: 10px; position: absolute; left: 16px; top: 50%; transform: translateY(-50%);">
+
+<!-- Teks center -->
+Order 'Crying in H Mart'
+
+<!-- Tiga titik dengan animasi -->
+<div class="ellipsis-hover position-absolute" style="right: 16px; top: 50%; transform: translateY(-50%);"
+     onclick="window.open('https://tr.ee/MeBeMYdhzB', '_blank')">
+  <i class="fas fa-ellipsis-v text-dark" style="opacity: 0.5;"></i>
+</div>
+
+
+</a>
+
+<!-- VIDEOS -->
+<div class="text-center mt-4 mb-4">
+  <h7 class="text-white fw-bold" style="font-family: 'Merriweather', serif;">VIDEOS</h7>
+</div>
+
+<!-- Wrapper -->
+<div class="position-relative mx-auto" style="max-width: 600px; overflow: hidden;margin-bottom: 25px;margin-top: 0px;">
+  <!-- Tombol Kiri -->
+  <button class="btn btn-dark position-absolute top-50 start-0 translate-middle-y rounded-circle z-2"
+  id="scrollLeftVideo" style="width: 36px; height: 36px; z-index: 10;">
+  <i class="fas fa-chevron-left"></i>
+
+</button>
+  <!-- Track -->
+  <div id="videoTrack" class="d-flex align-items-start"
+  style="gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;">
+    
+   <!-- CARD 1 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;">
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+
+
+
+    <!-- CARD 2 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;"> 
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+
+     <!-- CARD 3 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;">
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Tombol Panah Kanan di tempat yang benar -->
+<button class="btn btn-dark position-absolute top-50 end-0 translate-middle-y rounded-circle z-2"
+  id="scrollRightVideo" style="width: 36px; height: 36px; z-index: 10;">
+  <i class="fas fa-chevron-right"></i>
+</button>
+</div>
+
+
+
+<!-- Music  -->
+<div class="text-center mt-4 mb-4">
+  <h7 class="text-white fw-bold" style="font-family: 'Merriweather', serif;">MUSIC</h7>
+</div>
+
+<!-- Wrapper -->
+<div class="position-relative mx-auto" style="max-width: 600px; overflow: hidden; margin-bottom: 25px;">
+  <!-- Tombol Kiri -->
+  <button class="btn btn-dark position-absolute top-50 start-0 translate-middle-y rounded-circle z-2"
+  id="scrollLeftMusic" style="width: 36px; height: 36px; z-index: 10;">
+  <i class="fas fa-chevron-left"></i>
+</button>
+</button>
+  <!-- Track -->
+  <div id="musicTrack" class="d-flex align-items-start"
+  style="gap: 16px; overflow-x: auto; overflow-y: hidden; scroll-behavior: smooth; scrollbar-width: none; -ms-overflow-style: none;">
+    
+   <!-- CARD 1 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;">
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+
+
+
+    <!-- CARD 2 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;"> 
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+
+     <!-- CARD 3 -->
+<div class="image-card text-dark p-2 flex-shrink-0 d-flex flex-column justify-content-between"
+style="background-color: #74b3ce; width: 250px; border-radius: 10px; height: 315px;">
+
+<!-- Gambar dengan padding atas, kiri, kanan -->
+<div class="rounded" style="padding: 3px 3px 0 3px;">
+  <div style="overflow: hidden; height: 240px; border-radius: 0px;">
+    <a href="https://www.youtube.com/watch?v=gv5wWefxO6Q" target="_blank">
+      <img src="https://ugc.production.linktr.ee/bb909359-d3c7-426f-be39-8269f1ad5fc1_maxresdefault.jpeg?io=true&size=thumbnail-stack-v1_0"
+           style="width: 100%; height: 100%; object-fit: cover;">
+    </a>
+  </div>
+</div>
+
+<!-- Judul + Icon -->
+<div class="d-flex justify-content-between align-items-center px-1 mt-auto" style="padding-bottom: 8px;">
+
+<small class="mb-0 fw-bold">"Mega Circuit"</small>
+<div class="dots-hover">
+ <i class="fas fa-ellipsis-v dots-icon"></i>
+</div>
+</div>
+</div>
+</div>
+
+
+<!-- Tombol Panah Kanan di tempat yang benar -->
+<button class="btn btn-dark position-absolute top-50 end-0 translate-middle-y rounded-circle z-2"
+  id="scrollRightVideo" style="width: 36px; height: 36px; z-index: 10;">
+  <i class="fas fa-chevron-right"></i>
+</button>
+</div>
+
+ <!-- Website-->
+ <a href="https://tr.ee/xX-VSLwhkP" 
+ target="_blank" 
+ class="btn btn-custom w-100 position-relative text-center mt-3" 
+ style="max-width: 600px; padding: 20px 24px; font-size: 1.0rem; border-radius: 10px;">
+ <strong>Text + Email List Signup</strong>
+ <div class="ellipsis-hover position-absolute" style="top: 50%; right: 16px; transform: translateY(-50%);"
+      onclick="window.open('https://tr.ee/xX-VSLwhkP', '_blank')">
+   <i class="fas fa-ellipsis-v text-dark" style="opacity: 0.5;"></i>
+ </div>
+ 
+ </a>
+
+<!-- Script Geser -->
+<script>
+// ----------------- Video Section ------------------
+
+const cardWidth = 250;  // Width of each card
+const gap = 16;  // Gap between cards
+
+const videoTrack = document.getElementById("videoTrack");
+const prevButtonVideo = document.getElementById("scrollLeftVideo");
+const nextButtonVideo = document.getElementById("scrollRightVideo");
+
+let currentIndexVideo = 0;
+const scrollPositionsVideo = [
+  0,  // First position (start)
+  cardWidth - 150,  // Second position (move slightly to the right)
+  (cardWidth + gap) * 2,  // Third position
+  // Add more positions as needed
+];
+
+const totalCardsVideo = videoTrack.children.length;  // Total number of cards in the track
+
+// Update the button visibility based on scroll position
+function updateButtonsVideo() {
+  const maxScroll = videoTrack.scrollWidth - videoTrack.clientWidth;
+  const currentScroll = videoTrack.scrollLeft;
+
+  // Show left button if scroll is not at the start
+  prevButtonVideo.classList.toggle("hidden", currentScroll === 0);  // Hide left button at the start
+  // Show right button if scroll is not at the end
+  nextButtonVideo.classList.toggle("hidden", currentScroll >= maxScroll);  // Hide right button at the end
+}
+
+// Move to the next position in the video scroll
+function moveToNextVideo() {
+  // Check if we are not at the last position
+  if (currentIndexVideo < scrollPositionsVideo.length - 1) {
+    currentIndexVideo++;
+  } else {
+    // Infinite scroll, go back to the start (first position)
+    currentIndexVideo = 0;
+  }
+
+  videoTrack.scrollLeft = scrollPositionsVideo[currentIndexVideo];
+  updateButtonsVideo(); // Update buttons visibility
+}
+
+// Move to the previous position in the video scroll
+function moveToPrevVideo() {
+  // Check if we are not at the first position
+  if (currentIndexVideo > 0) {
+    currentIndexVideo--;
+  } else {
+    // Infinite scroll, go to the last position
+    currentIndexVideo = scrollPositionsVideo.length - 1;
+  }
+
+  videoTrack.scrollLeft = scrollPositionsVideo[currentIndexVideo];
+  updateButtonsVideo(); // Update buttons visibility
+}
+
+// Add event listeners for the buttons
+prevButtonVideo.addEventListener("click", moveToPrevVideo);
+nextButtonVideo.addEventListener("click", moveToNextVideo);
+
+// Ensure buttons and scroll positions are updated when the page loads
+window.addEventListener("load", () => {
+  updateButtonsVideo();
+});
+
+// ----------------- Music Section ------------------
+
+const musicTrack = document.getElementById("musicTrack");
+const prevButtonMusic = document.getElementById("scrollLeftMusic");
+const nextButtonMusic = document.getElementById("scrollRightMusic");
+
+let currentIndexMusic = 0;
+const scrollPositionsMusic = [
+  0,  // First position (start)
+  cardWidth - 150,  // Second position (move slightly to the right)
+  (cardWidth + gap) * 2,  // Third position
+  // Add more positions as needed
+];
+
+const totalCardsMusic = musicTrack.children.length;  // Total number of cards in the track
+
+// Update the button visibility based on scroll position
+function updateButtonsMusic() {
+  const maxScroll = musicTrack.scrollWidth - musicTrack.clientWidth;
+  const currentScroll = musicTrack.scrollLeft;
+
+  // Show left button if scroll is not at the start
+  prevButtonMusic.classList.toggle("hidden", currentScroll === 0);  // Hide left button at the start
+  // Show right button if scroll is not at the end
+  nextButtonMusic.classList.toggle("hidden", currentScroll >= maxScroll);  // Hide right button at the end
+}
+
+// Move to the next position in the video scroll
+function moveToNextMusic() {
+  // Check if we are not at the last position
+  if (currentIndexMusic < scrollPositionsMusic.length - 1) {
+    currentIndexMusic++;
+  } else {
+    // Infinite scroll, go back to the start (first position)
+    currentIndexMusic = 0;
+  }
+
+  musicTrack.scrollLeft = scrollPositionsMusic[currentIndexVideo];
+  updateButtonsMusic(); // Update buttons visibility
+}
+
+// Move to the previous position in the video scroll
+function moveToPrevMusic () {
+  // Check if we are not at the first position
+  if (currentIndexMusic > 0) {
+    currentIndexMusic--;
+  } else {
+    // Infinite scroll, go to the last position
+    currentIndexMusic = scrollPositionsMusic.length - 1;
+  }
+
+  musicTrack.scrollLeft = scrollPositionsMusic[currentIndexVideo];
+  updateButtonsMusic(); // Update buttons visibility
+}
+
+// Add event listeners for the buttons
+prevButtonMusic.addEventListener("click", moveToPrevMusic);
+nextButtonMusic.addEventListener("click", moveToNextMusic);
+
+// Ensure buttons and scroll positions are updated when the page loads
+window.addEventListener("load", () => {
+  updateButtonsMusic();
+});
+ </script>
+
+
+
+</body>
+</html>
